@@ -404,28 +404,6 @@ export default function WeddingInvitation() {
                   <source src="/gemini_generated_video_4c130e0c.mp4" type="video/mp4" />
                 </video>
 
-                <div className="absolute inset-0 flex flex-col items-center justify-start pt-6 md:pt-8 z-[160] pointer-events-none text-center bg-transparent transition-all duration-1000">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 2, delay: 0.5, ease: "easeOut" }}
-                    className="flex flex-col items-center px-4 w-full"
-                  >
-                    <h2 className="text-4xl md:text-5xl text-[#1a1a1a] mb-4 tracking-wide drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]" style={{ fontFamily: "'Noto Sans Sinhala', sans-serif", fontWeight: 600 }}>
-                      {lang === 'si' ? 'විවාහ ආරාධනයයි' : 'Wedding Invitation'}
-                    </h2>
-                    
-                    <div className="flex items-center justify-center gap-4 w-[160px] md:w-[220px] mb-5">
-                      <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent to-[#1a1a1a]/80 drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]"></div>
-                      <div className="w-1.5 h-1.5 rotate-45 bg-[#1a1a1a] drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]"></div>
-                      <div className="h-[2px] flex-1 bg-gradient-to-r from-[#1a1a1a]/80 to-transparent drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]"></div>
-                    </div>
-
-                    <p className="text-2xl md:text-3xl text-[#1a1a1a] tracking-[0.1em] font-bold drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]" style={{ fontFamily: "'Noto Sans Sinhala', sans-serif" }}>
-                      {INVITATION.couple.bride} {lang === 'si' ? 'සහ' : 'and'} {INVITATION.couple.groom}
-                    </p>
-                  </motion.div>
-                </div>
               </div>
             ) : (
               <>
