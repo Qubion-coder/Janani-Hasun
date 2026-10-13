@@ -4,14 +4,14 @@ import { Sparkles, MapPin, Calendar, Clock, ChevronDown } from "lucide-react";
 
 const INVITATION = {
   couple: {
-    bride: "හරින්ද්‍යා",
-    groom: "ආකාශ්",
-    brideFull: "හරින්ද්‍යා ඒකනායක",
-    groomFull: "ආකාශ් බණ්ඩාර",
+    bride: "ජනනි",
+    groom: "හසුන්",
+    brideFull: "ජනනි කරුණාරත්න",
+    groomFull: "හසුන් පරගොඩ ලියනගේ",
   },
   date: {
     displayNumeric: "10 . 12 . 2026",
-    displayLong: "2026 ජනවාරි මස 20 වන දින",
+    displayLong: "2026 දෙසැම්බර් මස 10 වන දින",
     countdownTarget: "2026-12-10T09:45:00+05:30",
   },
   time: {
@@ -22,8 +22,9 @@ const INVITATION = {
   },
   venue: {
     name: "The Golden Crown Ballroom",
+    hotel: "Heritage Hotel",
     city: "Anuradhapura",
-    mapQuery: "The Golden Crown Ballroom, Anuradhapura",
+    mapQuery: "Heritage Hotel, Anuradhapura",
     googleMapsLink: "https://maps.app.goo.gl/EXhT4sxjjX6SBCRp6",
   },
   rsvpContacts: [
@@ -534,14 +535,14 @@ export default function WeddingInvitation() {
                 <div className="mt-7 grid grid-cols-2 gap-5 sm:gap-10">
                   <div className="flex flex-col items-center gap-3">
                     <p className="text-[0.95rem] leading-[1.8] sm:text-base text-[#5A4A33] whitespace-pre-line text-center" style={{ fontFamily: "'Noto Sans Sinhala', sans-serif" }}>
-                      {lang === 'si' ? `ඒකනායක මහතා සහ
+                      {lang === 'si' ? `කරුණාරත්න මහතා සහ
                       මහත්මිය
                       යන දෙපළගේ
                       ආදරණීය දියණිය` : `Loving daughter of
                       Mr. & Mrs.
-                      Ekanayake`}
+                      Karunarathna`}
                     </p>
-                    <p className="mt-auto" aria-label="හරින්ද්‍යා ඒකනායක">
+                    <p className="mt-auto" aria-label={lang === 'si' ? INVITATION.couple.brideFull : 'Janani Karunarathna'}>
                       <span aria-hidden="true" className={lang === "si" ? "font-sinhala-name whitespace-nowrap" : "font-english-title tracking-wide whitespace-nowrap"} style={{ fontVariantLigatures: "none", color: "#8C6420", fontSize: "clamp(1.4rem,4.2vw,2rem)", lineHeight: 1.15 }}>
                         {lang === 'si' ? 'ජනනි' : 'Janani'}
                       </span>
@@ -549,14 +550,14 @@ export default function WeddingInvitation() {
                   </div>
                   <div className="flex flex-col items-center gap-3">
                     <p className="text-[0.95rem] leading-[1.8] sm:text-base text-[#5A4A33] whitespace-pre-line text-center" style={{ fontFamily: "'Noto Sans Sinhala', sans-serif" }}>
-                      {lang === 'si' ? `බණ්ඩාර මහතා සහ
+                      {lang === 'si' ? `පරගොඩ ලියනගේ මහතා සහ
                       මහත්මිය
                       යන දෙපළගේ
                       ආදරණීය පුත්‍රයා` : `Loving son of
                       Mr. & Mrs.
-                      Bandara`}
+                      Paragoda Liyanage`}
                     </p>
-                    <p className="mt-auto" aria-label="ආකාශ් බණ්ඩාර">
+                    <p className="mt-auto" aria-label={lang === 'si' ? INVITATION.couple.groomFull : 'Hasun Paragoda Liyanage'}>
                       <span aria-hidden="true" className={lang === "si" ? "font-sinhala-name block text-center" : "font-english-title tracking-wide block text-center"} style={{ fontVariantLigatures: "none", color: "#8C6420", fontSize: "clamp(1.4rem,4.2vw,2rem)", lineHeight: 1.15 }}>
                         {lang === 'si' ? 'හසුන්' : 'Hasun'}
                       </span>
@@ -567,7 +568,7 @@ export default function WeddingInvitation() {
                 <div className="relative mx-auto mt-7 w-[min(84%,440px)]">
                   <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" style={{ width: "150%", height: "128%", zIndex: 0, background: "radial-gradient(60% 58% at 50% 46%, rgba(252, 248, 238, 0.96) 0%, rgba(252, 248, 238, 0.85) 38%, rgba(252, 248, 238, 0.5) 62%, rgba(252, 248, 238, 0) 82%)" }}></div>
                   <div aria-hidden="true" className="pointer-events-none absolute bottom-[8%] left-1/2 -translate-x-1/2" style={{ width: "62%", height: "9%", zIndex: 1, borderRadius: "50%", background: "radial-gradient(50% 50% at 50% 50%, rgba(140, 100, 32, 0.22) 0%, rgba(140, 100, 32, 0) 70%)", filter: "blur(4px)" }}></div>
-                  <img src="/ChatGPT%20Image%20Sep%2023,%202026,%2002_48_11%20AM.png" alt="හරින්ද්‍යා සහ ආකාශ්" loading="eager" draggable="false" className="relative z-[2] w-full select-none rounded-[2rem] object-cover" />
+                  <img src="/ChatGPT%20Image%20Sep%2023,%202026,%2002_48_11%20AM.png" alt={lang === 'si' ? 'ජනනි සහ හසුන්' : 'Janani & Hasun'} loading="eager" draggable="false" className="relative z-[2] w-full select-none rounded-[2rem] object-cover" />
                 </div>
                 
                 <p className="mx-auto mt-6 max-w-[36ch] text-[1.02rem] leading-[1.9] text-[#5A4A33]" style={{ fontFamily: "'Noto Sans Sinhala', sans-serif" }}>
@@ -580,13 +581,13 @@ export default function WeddingInvitation() {
                   </div>
                   <div className="mx-auto mt-1.5 flex max-w-md items-center justify-center gap-4 sm:gap-6">
                     <span className="flex-1 py-1.5 text-center text-[#5A4A33] font-bold" style={{ fontFamily: "'Noto Sans Sinhala', sans-serif", fontSize: "clamp(1.05rem,2.8vw,1.3rem)", borderTop: "1.5px solid rgba(140, 100, 32, 0.85)", borderBottom: "1.5px solid rgba(140, 100, 32, 0.85)" }}>
-                      {lang === 'si' ? 'ජනවාරි' : 'January'}
+                      {lang === 'si' ? 'දෙසැම්බර්' : 'December'}
                     </span>
                     <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 700, color: "#8C6420", fontSize: "clamp(3rem,10vw,4.4rem)", lineHeight: 0.95 }}>
                       10
                     </span>
                     <span className="flex-1 py-1.5 text-center text-[#5A4A33] font-bold" style={{ fontFamily: "'Noto Sans Sinhala', sans-serif", fontSize: "clamp(1.05rem,2.8vw,1.3rem)", borderTop: "1.5px solid rgba(140, 100, 32, 0.85)", borderBottom: "1.5px solid rgba(140, 100, 32, 0.85)" }}>
-                      {lang === 'si' ? 'බදාදා' : 'Wednesday'}
+                      {lang === 'si' ? 'බ්‍රහස්පතින්දා' : 'Thursday'}
                     </span>
                   </div>
                   <div className="mt-2.5 text-[1rem] text-[#5A4A33]" style={{ fontFamily: "'Noto Sans Sinhala', sans-serif" }}>
@@ -600,6 +601,9 @@ export default function WeddingInvitation() {
                 <div className="mt-6 flex flex-col items-center gap-1.5">
                   <p className="font-bold text-[#5A4A33]" style={{ fontFamily: "'Noto Sans Sinhala', sans-serif", fontSize: "clamp(1.1rem,3vw,1.35rem)" }}>
                     {INVITATION.venue.name}
+                  </p>
+                  <p className="font-bold text-[#5A4A33]" style={{ fontFamily: "'Noto Sans Sinhala', sans-serif", fontSize: "clamp(1rem,2.6vw,1.15rem)" }}>
+                    {INVITATION.venue.hotel}
                   </p>
                   <p className="max-w-[40ch] text-[1rem] leading-[1.85] text-[#5A4A33]" style={{ fontFamily: "'Noto Sans Sinhala', sans-serif" }}>
                     {lang === 'si' ? 'හෝටල් පරිශ්‍රයේ දී පැවැත්වෙන මංගල උත්සවයට' : 'to the wedding reception held at the hotel premises'}
@@ -628,7 +632,7 @@ export default function WeddingInvitation() {
                 </div>
                 
                 <p className="mt-8 text-[0.95rem] font-bold" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, color: "#8A7A60" }}>
-                  {lang === 'si' ? '2026 ජනවාරි 20 බදාදා' : 'Thursday, December 10, 2026'}
+                  {lang === 'si' ? '2026 දෙසැම්බර් 10 බ්‍රහස්පතින්දා' : 'Thursday, December 10, 2026'}
                 </p>
               </div>
             </section>
@@ -659,7 +663,7 @@ export default function WeddingInvitation() {
                     {lang === 'si' ? 'මංගල උත්සවය සහ පෝරුවේ චාරිත්‍රය' : 'Wedding Reception & Poruwa Ceremony'}
                   </h3>
                   <div style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, color: "#5A4A33", fontSize: "clamp(0.98rem,2.4vw,1.08rem)" }}>
-                    {INVITATION.venue.name} – {INVITATION.venue.city}
+                    {INVITATION.venue.name} – {INVITATION.venue.hotel}
                   </div>
                   <span className="my-1.5 h-px w-10" style={{ background: "#D8B45F" }} aria-hidden="true"></span>
                   <p className="text-[0.95rem] leading-[1.8]" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, color: "#8A7A60" }}>
@@ -671,7 +675,7 @@ export default function WeddingInvitation() {
               <div className="mx-auto mt-12 max-w-md space-y-4 relative z-10">
                 <div className="relative">
                   <div className="rounded-2xl overflow-hidden" style={{ background: "#FCF8EE", border: "1px solid rgba(185, 138, 47, 0.4)", boxShadow: "0 18px 38px -28px rgba(140, 100, 32, 0.35)" }}>
-                    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Janani+and+Hasun&dates=20261210T041500Z/20261210T103000Z&details=Join+us+to+celebrate+the+wedding+of+Janani+and+Hasun!&location=Regenta+Arie+Lagoon,+Anuradhapura,+Sri+Lanka" target="_blank" rel="noopener noreferrer" className="w-full flex items-center text-left transition-colors hover:bg-white/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 gap-4 px-4 sm:px-5 py-4">
+                    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Janani+and+Hasun&dates=20261210T041500Z/20261210T103000Z&details=Join+us+to+celebrate+the+wedding+of+Janani+and+Hasun!&location=The+Golden+Crown+Ballroom,+Heritage+Hotel,+Anuradhapura,+Sri+Lanka" target="_blank" rel="noopener noreferrer" className="w-full flex items-center text-left transition-colors hover:bg-white/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 gap-4 px-4 sm:px-5 py-4">
                       <span className="flex-shrink-0 rounded-full flex items-center justify-center transition-colors w-10 h-10" style={{ background: "linear-gradient(135deg, #B98A2F, #8C6420)" }}>
                         <Calendar className="w-5 h-5 text-[#FDF8EC]" />
                       </span>
@@ -725,13 +729,13 @@ export default function WeddingInvitation() {
                       <div className="flex flex-col gap-1">
                         <span className="text-[0.62rem] uppercase tracking-[0.3em]" style={{ fontFamily: "'Montserrat', sans-serif", color: "#B98A2F" }}>Venue</span>
                         <h3 style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, fontWeight: 700, color: "#8C6420", fontSize: "1.2rem", lineHeight: 1.35 }}>The Golden Crown Ballroom</h3>
-                        <p className="text-[0.95rem]" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, color: "#8A7A60" }}>Anuradhapura, Sri Lanka.</p>
+                        <p className="text-[0.95rem]" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, color: "#8A7A60" }}>{INVITATION.venue.hotel}, {INVITATION.venue.city}, Sri Lanka.</p>
                       </div>
                     </div>
                   </div>
                   <div className="flex flex-col gap-4">
                     <div className="relative min-h-[300px] flex-1 overflow-hidden" style={{ borderRadius: "18px", border: "1px solid rgba(185, 138, 47, 0.4)", boxShadow: "0 28px 56px -34px rgba(120,86,30,0.5)" }}>
-                      <iframe title="Map of The Golden Crown Ballroom" src={`https://maps.google.com/maps?q=${encodeURIComponent("The Golden Crown Ballroom, Anuradhapura")}&z=14&output=embed`} loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="absolute inset-0 h-full w-full border-0" style={{ filter: "grayscale(0.2) saturate(0.9)" }}></iframe>
+                      <iframe title="Map of The Golden Crown Ballroom" src={`https://maps.google.com/maps?q=${encodeURIComponent(INVITATION.venue.mapQuery)}&z=14&output=embed`} loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="absolute inset-0 h-full w-full border-0" style={{ filter: "grayscale(0.2) saturate(0.9)" }}></iframe>
                     </div>
                     <a href={INVITATION.venue.googleMapsLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2.5 self-center rounded-full px-7 py-3 text-[0.95rem] transition-transform duration-200 hover:-translate-y-0.5 active:scale-95" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, fontWeight: 600, background: "linear-gradient(135deg, #B98A2F, #8C6420)", color: "#FDF8EC", boxShadow: "0 14px 26px -14px rgba(120,86,30,0.7)" }}>
                       <MapPin className="h-4 w-4" /> {lang === 'si' ? 'සිතියමෙන් බලන්න' : 'View on Map'}
@@ -752,7 +756,7 @@ export default function WeddingInvitation() {
                   {lang === 'si' ? 'ඔබගේ පැමිණීම අපට මහත් සතුටකි. කරුණාකර කලින් දන්වන්න.' : 'Your presence is our greatest joy. Please let us know in advance.'}
                 </p>
                 <p className="mb-9 text-[0.95rem]" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, fontWeight: 600, color: "#8C6420" }}>
-                  {lang === 'si' ? 'ඔබගේ පැමිණීම 2026 ජනවාරි 10 දිනට පෙර කරුණාකර දන්වන්න' : 'Kindly confirm your attendance'}
+                  {lang === 'si' ? 'කරුණාකර ඔබගේ පැමිණීම තහවුරු කරන්න' : 'Kindly confirm your attendance'}
                 </p>
                 
                 <form onSubmit={handleRsvpSubmit} className="rounded-[120px_120px_22px_22px] px-6 pb-10 pt-16 text-left sm:px-12 sm:pt-20" style={{ background: "#FCF8EE", border: "1px solid rgba(185, 138, 47, 0.4)", boxShadow: "0 30px 60px -40px rgba(120,86,30,0.45)" }}>
