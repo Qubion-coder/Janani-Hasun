@@ -12,11 +12,11 @@ const INVITATION = {
   date: {
     displayNumeric: "10 . 12 . 2026",
     displayLong: "2026 දෙසැම්බර් මස 10 වන දින",
-    countdownTarget: "2026-12-10T09:45:00+05:30",
+    countdownTarget: "2026-12-10T09:30:00+05:30",
   },
   time: {
-    ceremonyStart: "පෙ.ව. 9:15",
-    ceremonyEnd: "ප.ව. 12:00",
+    ceremonyStart: "පෙ.ව. 9:30",
+    ceremonyEnd: "ප.ව. 4:00",
     welcome: "උදෑසන 8:00",
   },
   venue: {
@@ -27,7 +27,7 @@ const INVITATION = {
     googleMapsLink: "https://maps.app.goo.gl/EXhT4sxjjX6SBCRp6",
   },
   rsvpContacts: [
-    "Sanath Karunarathna - 071 419 4178",
+    "W. M. S. Karunarathne - 071 419 4178",
     "P. L. Chandrasena - 071 487 8852",
   ],
 } as const;
@@ -48,6 +48,7 @@ const PRE_IMAGES = [
 ];
 
 const HERO_BACKGROUND_IMAGE = PRE_IMAGES[4];
+const COUPLE_IMAGES = ["/c1.jpeg", "/c2.jpeg"];
 const THEME_WATERMARK_IMAGE = "/Gemini_Generated_Image_bu4x6cbu4x6cbu4x.jpg";
 
 function FloatingPetals() {
@@ -592,10 +593,10 @@ export default function WeddingInvitation() {
                     </span>
                   </div>
                   <div className="mt-2.5 text-[1rem] text-[#5A4A33]" style={{ fontFamily: "'Noto Sans Sinhala', sans-serif" }}>
-                    {lang === 'si' ? 'උදෑසන සිට දහවල් 12:00 දක්වා' : 'From morning until 12:00 PM'}
+                    {lang === 'si' ? 'උදෑසන 8:00 සිට හවස 4:00 දක්වා' : 'From 8:00 AM until 4:00 PM'}
                   </div>
                   <p className="mt-1 text-[0.92rem]" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, color: "#8A7A60" }}>
-                    {lang === 'si' ? `(පෝරුවේ චාරිත්‍ර ${INVITATION.time.ceremonyStart} ට)` : `(Poruwa Ceremony at 9:45 A.M.)`}
+                    {lang === 'si' ? `(පෝරුවේ චාරිත්‍ර ${INVITATION.time.ceremonyStart} ට)` : `(Poruwa Ceremony at 9:30 A.M.)`}
                   </p>
                 </div>
                 
@@ -638,6 +639,41 @@ export default function WeddingInvitation() {
               </div>
             </section>
 
+            <section id="moments" className="relative z-10 w-full overflow-hidden bg-[#F1EBDD] px-6 py-16 sm:px-7 sm:py-24 border-t border-[#8C6420]/10">
+              <div className="mb-10 text-center sm:mb-14">
+                <span className="mb-2 block text-[0.66rem] uppercase" style={{ color: "#B98A2F", fontFamily: "'Montserrat', sans-serif", letterSpacing: "0.34em" }}>
+                  Our Moments
+                </span>
+                <h2 className="leading-tight" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, fontWeight: 700, color: "#8C6420", fontSize: "clamp(1.7rem,4.2vw,2.6rem)" }}>
+                  {lang === 'si' ? 'අපේ සුන්දර මතක' : 'Our Moments'}
+                </h2>
+                <div aria-hidden="true" className="mt-3" style={{ width: "120px", aspectRatio: "2100 / 756", margin: "0 auto", background: "linear-gradient(180deg, #D8B45F 0%, #B98A2F 55%, #8C6420 100%)", WebkitMaskImage: "url(/lotus-mandala/lotus-flourish.svg)", maskImage: "url(/lotus-mandala/lotus-flourish.svg)", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskPosition: "center", maskPosition: "center" }}></div>
+              </div>
+
+              <div className="mx-auto grid max-w-2xl grid-cols-2 items-start gap-4 sm:gap-8">
+                {COUPLE_IMAGES.map((src, i) => (
+                  <motion.div
+                    key={src}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.8, delay: i * 0.2 }}
+                    className={i === 1 ? "mt-10 sm:mt-16" : ""}
+                  >
+                    <div className="p-1.5 sm:p-2" style={{ background: "#FCF8EE", border: "1px solid rgba(185, 138, 47, 0.45)", borderRadius: "999px 999px 18px 18px", boxShadow: "0 22px 44px -28px rgba(120,86,30,0.55)" }}>
+                      <div className="overflow-hidden" style={{ aspectRatio: "3 / 4", borderRadius: "999px 999px 12px 12px", border: "1px solid rgba(216, 180, 95, 0.7)" }}>
+                        <img src={src} alt={lang === 'si' ? 'ජනනි සහ හසුන්' : 'Janani & Hasun'} loading="lazy" draggable="false" className="h-full w-full select-none object-cover" />
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              <p className="mx-auto mt-10 max-w-[36ch] text-center text-[1.02rem] leading-[1.9] text-[#5A4A33] sm:mt-14" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif` }}>
+                {lang === 'si' ? 'එකට ගෙවූ සෑම මොහොතක්ම අපට වටිනා මතකයකි.' : 'Every moment spent together is a memory we treasure.'}
+              </p>
+            </section>
+
             <section id="events" className="relative mx-auto w-full px-6 py-16 sm:px-7 sm:py-24"
               style={{
                 backgroundImage: 'url("/vintage_paper.png")',
@@ -668,7 +704,7 @@ export default function WeddingInvitation() {
                   </div>
                   <span className="my-1.5 h-px w-10" style={{ background: "#D8B45F" }} aria-hidden="true"></span>
                   <p className="text-[0.95rem] leading-[1.8]" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, color: "#8A7A60" }}>
-                    {lang === 'si' ? 'පෝරුවේ චාරිත්‍රය:' : 'Poruwa Ceremony:'} {lang === 'si' ? INVITATION.time.ceremonyStart : '9:45 A.M.'} {lang === 'si' ? 'ට' : ''}
+                    {lang === 'si' ? 'පෝරුවේ චාරිත්‍රය:' : 'Poruwa Ceremony:'} {lang === 'si' ? INVITATION.time.ceremonyStart : '9:30 A.M.'} {lang === 'si' ? 'ට' : ''}
                   </p>
                 </div>
               </div>
@@ -676,7 +712,7 @@ export default function WeddingInvitation() {
               <div className="mx-auto mt-12 max-w-md space-y-4 relative z-10">
                 <div className="relative">
                   <div className="rounded-2xl overflow-hidden" style={{ background: "#FCF8EE", border: "1px solid rgba(185, 138, 47, 0.4)", boxShadow: "0 18px 38px -28px rgba(140, 100, 32, 0.35)" }}>
-                    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Janani+and+Hasun&dates=20261210T041500Z/20261210T103000Z&details=Join+us+to+celebrate+the+wedding+of+Janani+and+Hasun!&location=The+Golden+Crown+Ballroom,+Heritage+Hotel,+Anuradhapura,+Sri+Lanka" target="_blank" rel="noopener noreferrer" className="w-full flex items-center text-left transition-colors hover:bg-white/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 gap-4 px-4 sm:px-5 py-4">
+                    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Janani+and+Hasun&dates=20261210T023000Z/20261210T103000Z&details=Join+us+to+celebrate+the+wedding+of+Janani+and+Hasun!&location=The+Golden+Crown+Ballroom,+Heritage+Hotel,+Anuradhapura,+Sri+Lanka" target="_blank" rel="noopener noreferrer" className="w-full flex items-center text-left transition-colors hover:bg-white/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 gap-4 px-4 sm:px-5 py-4">
                       <span className="flex-shrink-0 rounded-full flex items-center justify-center transition-colors w-10 h-10" style={{ background: "linear-gradient(135deg, #B98A2F, #8C6420)" }}>
                         <Calendar className="w-5 h-5 text-[#FDF8EC]" />
                       </span>
@@ -910,7 +946,7 @@ export default function WeddingInvitation() {
                   
                   <div className="mb-8 flex flex-col items-center gap-1 text-[1rem]" style={{ fontFamily: `${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, color: "#EDDFB8" }}>
                     <div className="font-bold uppercase tracking-widest text-[0.75rem] mb-1" style={{ fontFamily: "'Montserrat', sans-serif", opacity: 0.85 }}>Contact</div>
-                    <div>Sanath Karunarathna - 071 419 4178</div>
+                    <div>W. M. S. Karunarathne - 071 419 4178</div>
                     <div>P. L. Chandrasena - 071 487 8852</div>
                   </div>
 
