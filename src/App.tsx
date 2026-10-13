@@ -17,7 +17,6 @@ const INVITATION = {
   time: {
     ceremonyStart: "පෙ.ව. 9:15",
     ceremonyEnd: "ප.ව. 12:00",
-    registration: "පෙ.ව. 10:00",
     welcome: "උදෑසන 8:00",
   },
   venue: {
@@ -49,6 +48,7 @@ const PRE_IMAGES = [
 ];
 
 const HERO_BACKGROUND_IMAGE = PRE_IMAGES[4];
+const THEME_WATERMARK_IMAGE = "/Gemini_Generated_Image_bu4x6cbu4x6cbu4x.jpg";
 
 function FloatingPetals() {
   const [isLowPowerMode, setIsLowPowerMode] = useState(false);
@@ -498,6 +498,7 @@ export default function WeddingInvitation() {
             className="website-shell relative z-20 w-full"
             style={{ background: 'url("/Gemini_Generated_Image_axw9l3axw9l3axw9.jpg") center/cover fixed no-repeat' }}
           >
+            <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[15]" style={{ backgroundImage: `url("${THEME_WATERMARK_IMAGE}")`, backgroundSize: "cover", backgroundPosition: "62% center", backgroundRepeat: "no-repeat", opacity: 0.16, mixBlendMode: "multiply" }}></div>
             <motion.button
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -591,7 +592,7 @@ export default function WeddingInvitation() {
                     </span>
                   </div>
                   <div className="mt-2.5 text-[1rem] text-[#5A4A33]" style={{ fontFamily: "'Noto Sans Sinhala', sans-serif" }}>
-                    {lang === 'si' ? 'උදෑසන සිට දහවල් 12:00 දක්වා (උදෑසන ආහාර වේල)' : 'From morning until 12:00 PM (Breakfast will be served)'}
+                    {lang === 'si' ? 'උදෑසන සිට දහවල් 12:00 දක්වා' : 'From morning until 12:00 PM'}
                   </div>
                   <p className="mt-1 text-[0.92rem]" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, color: "#8A7A60" }}>
                     {lang === 'si' ? `(පෝරුවේ චාරිත්‍ර ${INVITATION.time.ceremonyStart} ට)` : `(Poruwa Ceremony at 9:45 A.M.)`}
@@ -667,7 +668,7 @@ export default function WeddingInvitation() {
                   </div>
                   <span className="my-1.5 h-px w-10" style={{ background: "#D8B45F" }} aria-hidden="true"></span>
                   <p className="text-[0.95rem] leading-[1.8]" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, color: "#8A7A60" }}>
-                    {lang === 'si' ? 'පෝරුවේ චාරිත්‍රය:' : 'Poruwa Ceremony:'} {lang === 'si' ? INVITATION.time.ceremonyStart : '9:45 A.M.'} {lang === 'si' ? 'ට' : ''}<br/>{lang === 'si' ? 'උදෑසන ආහාරය:' : 'Breakfast:'} {lang === 'si' ? INVITATION.time.registration : 'Followed by the Wedding Reception'} {lang === 'si' ? 'සිට' : 'onwards'}
+                    {lang === 'si' ? 'පෝරුවේ චාරිත්‍රය:' : 'Poruwa Ceremony:'} {lang === 'si' ? INVITATION.time.ceremonyStart : '9:45 A.M.'} {lang === 'si' ? 'ට' : ''}
                   </p>
                 </div>
               </div>
@@ -869,6 +870,27 @@ export default function WeddingInvitation() {
                 </form>
               </div>
             </section>
+
+            <section id="thank-you" className="relative z-10 w-full overflow-hidden px-6 py-16 sm:px-7 sm:py-24 bg-[#F1EBDD]">
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ backgroundImage: `url("${THEME_WATERMARK_IMAGE}")`, backgroundSize: "cover", backgroundPosition: "62% center", backgroundRepeat: "no-repeat", opacity: 0.32 }}></div>
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(70% 60% at 50% 50%, rgba(252, 248, 238, 0.92) 0%, rgba(252, 248, 238, 0.7) 55%, rgba(241, 235, 221, 0.35) 100%)" }}></div>
+              <div className="relative mx-auto max-w-xl text-center">
+                <span className="mb-2 block text-[0.66rem] uppercase" style={{ color: "#B98A2F", fontFamily: "'Montserrat', sans-serif", letterSpacing: "0.34em" }}>Thank You</span>
+                <h2 style={{ fontSize: "clamp(2rem,7vw,3rem)", lineHeight: 1.3, color: "#8C6420" }}>
+                  <span className={lang === "si" ? "font-sinhala-name" : "font-english-title tracking-wide"} style={{ fontVariantLigatures: "none" }}>{lang === 'si' ? 'ස්තුතියි' : 'Thank You'}</span>
+                </h2>
+                <div aria-hidden="true" className="mt-3" style={{ width: "120px", aspectRatio: "2100 / 756", margin: "0 auto", background: "linear-gradient(180deg, #D8B45F 0%, #B98A2F 55%, #8C6420 100%)", WebkitMaskImage: "url(/lotus-mandala/lotus-flourish.svg)", maskImage: "url(/lotus-mandala/lotus-flourish.svg)", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskPosition: "center", maskPosition: "center" }}></div>
+                <p className="mx-auto mt-6 max-w-[42ch] text-[1.02rem] leading-[1.9] text-[#5A4A33]" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif` }}>
+                  {lang === 'si' ? 'අපගේ ජීවිතයේ සුන්දරම දිනය ඔබගේ පැමිණීමෙන් සහ ආශිර්වාදයෙන් තවත් අර්ථවත් වනු ඇත. ඔබගේ ආදරයට සහ සුබ පැතුම්වලට අපගේ හෘදයාංගම ස්තුතිය.' : 'Your presence and blessings will make the most beautiful day of our lives even more meaningful. Our heartfelt thanks for your love and good wishes.'}
+                </p>
+                <p className="mt-5">
+                  <span className={lang === "si" ? "font-sinhala-name" : "font-english-title tracking-wide"} style={{ fontVariantLigatures: "none", color: "#8C6420", fontSize: "clamp(1.4rem,4.2vw,2rem)", lineHeight: 1.15 }}>
+                    {lang === 'si' ? 'ජනනි සහ හසුන්' : 'Janani & Hasun'}
+                  </span>
+                </p>
+              </div>
+            </section>
+
             <section id="footer" className="relative overflow-hidden w-full">
               <div className="relative px-6 py-9 text-center sm:py-12" style={{ background: "linear-gradient(180deg, #8C6420 0%, #6E4D16 100%)", color: "#F8F1DC" }}>
                 <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.08]" aria-hidden="true">
