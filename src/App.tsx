@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, MapPin, Calendar, Clock, ChevronDown, Phone } from "lucide-react";
+import { readGuestFromLocation, SALUTATIONS } from "./guest";
 
 const INVITATION = {
   couple: {
@@ -34,7 +35,7 @@ const INVITATION = {
 
 const backgroundMusic = "/Sihilel_Wu_Sihineka-Pravegaya_Movie___Bathiya_And_Santhush_Sarigama_lk.mp3";
 const googleScriptUrl =
-  "https://script.google.com/macros/s/AKfycbwxIzEgbWhN1mIGbFiI4YIKGqa4S5dylwrDaNkoMZVkUzEmhES9QVqDm2YIgXo3sepF/exec";
+  "https://script.google.com/macros/s/AKfycbw-iyolG1eUYx3LqFoHD_lvkbiEhmYUjMDX9iErnNW1WwzHbWsk_0kfCUjjj9biBpzASQ/exec";
 
 const publicImagePath = (fileName: string) => `/images/${fileName.replaceAll(" ", "%20")}`;
 const preImagePath = (fileName: string) => `/pre/${fileName.replaceAll(" ", "%20")}`;
@@ -50,6 +51,22 @@ const PRE_IMAGES = [
 const HERO_BACKGROUND_IMAGE = PRE_IMAGES[4];
 const COUPLE_IMAGES = ["/c1.jpeg", "/c2.jpeg"];
 const THEME_WATERMARK_IMAGE = "/Gemini_Generated_Image_bu4x6cbu4x6cbu4x.jpg";
+
+function GuestGreeting({ name, salutation, lang, className = "" }: { name: string; salutation: string; lang: 'si' | 'en'; className?: string }) {
+  return (
+    <div className={`flex flex-col items-center ${className}`}>
+      <div aria-hidden="true" className="flex items-center gap-3" style={{ color: "#B98A2F" }}>
+        <span style={{ width: 34, height: 1, background: "linear-gradient(90deg, transparent, #B98A2F)" }}></span>
+        <span style={{ fontSize: "0.7rem" }}>❖</span>
+        <span style={{ width: 34, height: 1, background: "linear-gradient(90deg, #B98A2F, transparent)" }}></span>
+      </div>
+      <p className="mt-2 max-w-[22ch] text-center" style={{ lineHeight: 1.45 }}>
+        <span style={{ fontFamily: "'Cormorant Garamond', 'Noto Sans Sinhala', Georgia, serif", fontStyle: "italic", fontWeight: 600, color: "#8C6420", fontSize: "clamp(1.25rem,5vw,1.6rem)" }}>{name}</span>{" "}
+        <span style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, fontWeight: 600, color: "#5A4A33", fontSize: "clamp(0.98rem,3.8vw,1.15rem)" }}>{salutation}</span>
+      </p>
+    </div>
+  );
+}
 
 function FloatingPetals() {
   const [isLowPowerMode, setIsLowPowerMode] = useState(false);
@@ -270,8 +287,8 @@ export default function WeddingInvitation() {
   const [hasAttemptedAutoplay, setHasAttemptedAutoplay] = useState(false);
   const [isPlayingIntroVideo, setIsPlayingIntroVideo] = useState(false);
 
-  const searchParams = new URLSearchParams(window.location.search);
-  const guestName = searchParams.get("to");
+  const guest = readGuestFromLocation(window.location);
+  const guestSalutation = guest ? SALUTATIONS[guest.salutation] : null;
 
   const [rsvpForm, setRsvpForm] = useState({
     name: "",
@@ -296,6 +313,11 @@ export default function WeddingInvitation() {
     if (!response.ok) {
       throw new Error("b,a,Su id¾:l fkdùh");
     }
+
+    const result = await response.json().catch(() => null);
+    if (result && result.ok === false) {
+      throw new Error(result.message || "RSVP failed");
+    }
   };
 
   const handleRsvpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -313,7 +335,8 @@ export default function WeddingInvitation() {
         action: "rsvp",
         name: rsvpForm.name.trim(),
         guests: rsvpForm.guests,
-        dietaryNotes: "",
+        inviteName: guest?.name ?? "",
+        salutation: guest?.salutation ?? "",
       });
 
       setRsvpStatus("success");
@@ -456,8 +479,12 @@ export default function WeddingInvitation() {
                   <div>
                     <div aria-hidden="true" style={{ width: "min(56vw,260px)", height: "min(20vw,94px)", background: "linear-gradient(180deg, #D8B45F 0%, #B98A2F 55%, #8C6420 100%)", WebkitMaskImage: "url('/image-removebg-preview (4).png')", maskImage: "url('/image-removebg-preview (4).png')", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskPosition: "center", maskPosition: "center" }}></div>
                   </div>
-                  
-                  <p className="mt-7" aria-label="සාදර ඇරයුමයි !">
+
+                  {guest && guestSalutation && (
+                    <GuestGreeting name={guest.name} salutation={lang === 'si' ? guestSalutation.si : guestSalutation.en} lang={lang} className="mt-6" />
+                  )}
+
+                  <p className={guest ? "mt-3" : "mt-7"} aria-label="සාදර ඇරයුමයි !">
                     <span aria-hidden="true" className={lang === "si" ? "font-sinhala-name" : "font-english-title tracking-wide"} style={{ fontVariantLigatures: "none", color: "#8C6420", fontSize: "clamp(1.7rem,7vw,2.8rem)", lineHeight: 1.2 }}>{lang === 'si' ? 'සාදර ඇරයුමයි' : 'You\'re Invited'}</span>
                     <span aria-hidden="true" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, fontWeight: 700, color: "#8C6420", fontSize: "clamp(1.7rem,7vw,2.8rem)", lineHeight: 1.2 }}>{lang === 'si' ? ' !' : '!'}</span>
                   </p>
@@ -527,6 +554,9 @@ export default function WeddingInvitation() {
               </div>
               
               <div className="relative mx-auto max-w-2xl px-6 text-center sm:px-8 pb-12 z-10 mt-6">
+                {guest && guestSalutation && (
+                  <GuestGreeting name={guest.name} salutation={lang === 'si' ? guestSalutation.si : guestSalutation.en} lang={lang} className="mb-4" />
+                )}
                 <div>
                   <h1 aria-label="සාදර ඇරයුමයි !" className="-mt-1" style={{ fontSize: "clamp(2.1rem,8.5vw,3.4rem)", lineHeight: 1.25, backgroundImage: "linear-gradient(170deg, #D8B45F 0%, #B98A2F 45%, #8C6420 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
                     <span aria-hidden="true" className={lang === "si" ? "font-sinhala-name" : "font-english-title tracking-wide"} style={{ fontVariantLigatures: "none" }}>{lang === 'si' ? 'සාදර ඇරයුමයි' : 'You\'re Invited'}</span>

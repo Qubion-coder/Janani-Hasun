@@ -1,198 +1,305 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Check, Copy, ExternalLink, Heart, Link2, MessageCircle, Sparkles, Trash2 } from 'lucide-react';
+import { buildGuestUrl, buildInviteMessage, COUPLE_SIGNATURE, SALUTATIONS, type SalutationKey } from './guest';
 
-interface GeneratedLink {
+interface GeneratedInvite {
   id: string;
-  prefix: string;
-  guestName: string;
+  name: string;
+  salutation: SalutationKey;
   url: string;
+  message: string;
   createdAt: string;
 }
 
+const STORAGE_KEY = 'guestInvites';
+const GOLD = '#B98A2F';
+const GOLD_DARK = '#8C6420';
+const INK = '#5A4A33';
+const goldGradient = 'linear-gradient(135deg, #D8B45F 0%, #B98A2F 50%, #8C6420 100%)';
+const sinhalaFont = "'Noto Sans Sinhala', 'Cormorant Garamond', serif";
+const serifFont = "'Cormorant Garamond', Georgia, serif";
+
+function loadInvites(): GeneratedInvite[] {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveInvites(invites: GeneratedInvite[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(invites));
+  } catch {
+    // Storage unavailable (private mode); history just won't persist.
+  }
+}
+
+function Ornament() {
+  return (
+    <div aria-hidden="true" className="flex items-center justify-center gap-3" style={{ color: GOLD }}>
+      <span className="h-px w-12" style={{ background: `linear-gradient(90deg, transparent, ${GOLD})` }} />
+      <span className="text-xs">❖</span>
+      <span className="h-px w-12" style={{ background: `linear-gradient(90deg, ${GOLD}, transparent)` }} />
+    </div>
+  );
+}
+
+function StepLabel({ step, children }: { step: number; children: React.ReactNode }) {
+  return (
+    <div className="mb-3 flex items-center gap-3">
+      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full text-sm font-semibold text-white" style={{ background: goldGradient, fontFamily: serifFont }}>
+        {step}
+      </span>
+      <span className="text-[0.95rem] font-semibold tracking-wide" style={{ color: GOLD_DARK, fontFamily: serifFont }}>{children}</span>
+    </div>
+  );
+}
+
 export default function Admin() {
-  const [prefix, setPrefix] = useState('Mr. & Mrs.');
+  const [salutation, setSalutation] = useState<SalutationKey>('obata');
   const [guestName, setGuestName] = useState('');
-  const [links, setLinks] = useState<GeneratedLink[]>([]);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [current, setCurrent] = useState<GeneratedInvite | null>(null);
+  const [invites, setInvites] = useState<GeneratedInvite[]>([]);
+  const [copied, setCopied] = useState<string | null>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem('generatedLinks');
-    if (saved) {
-      setLinks(JSON.parse(saved));
-    }
+    setInvites(loadInvites());
+    document.title = `Invitation Links · ${COUPLE_SIGNATURE}`;
   }, []);
 
-  const prefixes = [
-    'Mr. & Mrs.',
-    'Mr.',
-    'Mrs.',
-    'Ms.',
-    'Miss',
-    'Dr. & Mrs.',
-    'Dr.',
-    'Prof.',
-    'Rev.',
-    'To'
-  ];
+  const updateInvites = (next: GeneratedInvite[]) => {
+    setInvites(next);
+    saveInvites(next);
+  };
 
   const handleGenerate = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!guestName.trim()) return;
+    const name = guestName.trim();
+    if (!name) return;
 
-    const fullName = `${prefix} ${guestName.trim()}`;
-    const baseUrl = window.location.origin;
-    const url = `${baseUrl}/?to=${encodeURIComponent(fullName)}`;
-    
-    const newLink: GeneratedLink = {
+    const url = buildGuestUrl(window.location.origin, name, salutation);
+    const invite: GeneratedInvite = {
       id: crypto.randomUUID(),
-      prefix,
-      guestName: guestName.trim(),
+      name,
+      salutation,
       url,
-      createdAt: new Date().toLocaleString('en-GB', { 
-        day: '2-digit', 
-        month: '2-digit', 
-        year: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit' 
-      }),
+      message: buildInviteMessage(name, salutation, url),
+      createdAt: new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }),
     };
 
-    const newLinks = [newLink, ...links];
-    setLinks(newLinks);
-    localStorage.setItem('generatedLinks', JSON.stringify(newLinks));
+    setCurrent(invite);
+    updateInvites([invite, ...invites]);
     setGuestName('');
   };
 
-  const handleCopy = async (link: GeneratedLink) => {
+  const copy = async (text: string, key: string) => {
     try {
-      await navigator.clipboard.writeText(link.url);
-      setCopiedId(link.id);
-      setTimeout(() => setCopiedId(null), 2000);
-    } catch (err) {
-      console.error('Failed to copy', err);
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const area = document.createElement('textarea');
+      area.value = text;
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand('copy');
+      area.remove();
     }
+    setCopied(key);
+    setTimeout(() => setCopied((k) => (k === key ? null : k)), 2000);
   };
+
+  const whatsappUrl = (message: string) => `https://wa.me/?text=${encodeURIComponent(message)}`;
 
   const handleDelete = (id: string) => {
-    const newLinks = links.filter(l => l.id !== id);
-    setLinks(newLinks);
-    localStorage.setItem('generatedLinks', JSON.stringify(newLinks));
+    updateInvites(invites.filter((i) => i.id !== id));
+    if (current?.id === id) setCurrent(null);
   };
 
+  const previewName = guestName.trim() || 'Sanjaya';
+
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 font-sans">
-      <div className="max-w-3xl mx-auto space-y-8">
-        
-        {/* Generator Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
-          <h1 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-            </svg>
-            LINK GENERATOR
+    <div
+      className="h-[100dvh] overflow-y-auto overflow-x-hidden px-4 py-10 sm:py-14"
+      style={{ background: 'radial-gradient(120% 80% at 50% 0%, #FBF6EA 0%, #F1EBDD 55%, #E9DFC8 100%)', color: INK }}
+    >
+      <div className="mx-auto max-w-2xl">
+        {/* Header */}
+        <header className="mb-8 text-center">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.35em]" style={{ color: GOLD, fontFamily: "'Montserrat', sans-serif" }}>
+            Invitation Studio
+          </p>
+          <h1
+            className="mt-2"
+            style={{ fontFamily: "'Playball', cursive", fontSize: 'clamp(2.2rem, 8vw, 3.2rem)', lineHeight: 1.15, backgroundImage: goldGradient, WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}
+          >
+            {COUPLE_SIGNATURE}
           </h1>
+          <div className="mt-3"><Ornament /></div>
+          <p className="mt-3 text-[0.98rem] italic" style={{ fontFamily: serifFont }}>
+            Create a personal invitation link for each guest
+          </p>
+        </header>
 
-          <form onSubmit={handleGenerate} className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-600">Select Prefix</label>
-                <select
-                  value={prefix}
-                  onChange={(e) => setPrefix(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all appearance-none"
+        {/* Generator */}
+        <form
+          onSubmit={handleGenerate}
+          className="rounded-[1.75rem] p-6 sm:p-8"
+          style={{ background: 'rgba(255, 253, 246, 0.88)', border: '1px solid rgba(185, 138, 47, 0.35)', boxShadow: '0 24px 48px -28px rgba(120, 86, 30, 0.55)' }}
+        >
+          <StepLabel step={1}>Select how to address the guest</StepLabel>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3" role="radiogroup" aria-label="Salutation">
+            {(Object.keys(SALUTATIONS) as SalutationKey[]).map((key) => {
+              const active = salutation === key;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => setSalutation(key)}
+                  className="relative rounded-2xl px-4 py-4 text-center transition-all duration-200 hover:-translate-y-0.5"
+                  style={{
+                    background: active ? goldGradient : '#FFFDF6',
+                    border: `1.5px solid ${active ? GOLD_DARK : 'rgba(185, 138, 47, 0.35)'}`,
+                    boxShadow: active ? '0 12px 24px -14px rgba(120, 86, 30, 0.8)' : 'none',
+                    color: active ? '#FDF8EC' : GOLD_DARK,
+                  }}
                 >
-                  {prefixes.map(p => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
-              </div>
+                  {active && <Check className="absolute right-3 top-3 h-4 w-4" />}
+                  <span className="block text-[1.05rem] font-bold" style={{ fontFamily: sinhalaFont }}>{SALUTATIONS[key].si}</span>
+                  <span className="mt-1 block text-[0.72rem] uppercase tracking-[0.18em]" style={{ fontFamily: "'Montserrat', sans-serif", opacity: active ? 0.9 : 0.65 }}>
+                    {SALUTATIONS[key].hint}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
 
-              <div className="space-y-2 md:col-span-2">
-                <label className="text-sm font-semibold text-slate-600">Guest Name</label>
-                <input
-                  type="text"
-                  placeholder="e.g. John Doe"
-                  value={guestName}
-                  onChange={(e) => setGuestName(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400"
-                  required
-                />
-              </div>
+          <div className="mt-7">
+            <StepLabel step={2}>Enter the guest's name</StepLabel>
+            <input
+              type="text"
+              placeholder="e.g. Sanjaya"
+              value={guestName}
+              onChange={(e) => setGuestName(e.target.value)}
+              required
+              className="w-full rounded-2xl px-5 py-3.5 text-[1.05rem] outline-none transition-shadow placeholder:text-[#B9A988] focus:shadow-[0_0_0_4px_rgba(185,138,47,0.18)]"
+              style={{ background: '#FFFDF6', border: '1.5px solid rgba(185, 138, 47, 0.4)', color: INK, fontFamily: sinhalaFont }}
+            />
+            <p className="mt-2.5 text-center text-[0.95rem]" style={{ fontFamily: sinhalaFont }}>
+              <span className="text-xs uppercase tracking-[0.2em]" style={{ color: '#A8977A', fontFamily: "'Montserrat', sans-serif" }}>Preview · </span>
+              <span className="font-semibold" style={{ color: GOLD_DARK }}>{previewName}</span> {SALUTATIONS[salutation].si} ❤️
+            </p>
+          </div>
+
+          <button
+            type="submit"
+            disabled={!guestName.trim()}
+            className="mt-7 flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-[1.05rem] font-semibold tracking-wide text-[#FDF8EC] transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+            style={{ background: goldGradient, boxShadow: '0 14px 28px -14px rgba(120, 86, 30, 0.85)', fontFamily: serifFont }}
+          >
+            <Sparkles className="h-5 w-5" />
+            Generate Link
+          </button>
+        </form>
+
+        {/* Output */}
+        {current && (
+          <section
+            className="mt-8 overflow-hidden rounded-[1.75rem]"
+            style={{ background: '#FFFDF6', border: '1px solid rgba(185, 138, 47, 0.45)', boxShadow: '0 24px 48px -28px rgba(120, 86, 30, 0.55)' }}
+          >
+            <div className="flex items-center justify-between gap-3 px-6 py-4 sm:px-8" style={{ background: 'rgba(185, 138, 47, 0.1)', borderBottom: '1px solid rgba(185, 138, 47, 0.25)' }}>
+              <span className="flex items-center gap-2 text-[0.95rem] font-semibold" style={{ color: GOLD_DARK, fontFamily: serifFont }}>
+                <Heart className="h-4 w-4" fill="currentColor" /> Invitation ready
+              </span>
+              <span className="text-xs" style={{ color: '#A8977A' }}>{current.name}</span>
             </div>
 
-            <button
-              type="submit"
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 rounded-xl transition-colors shadow-sm active:scale-[0.99] flex justify-center items-center gap-2"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-              Generate Link
-            </button>
-          </form>
-        </div>
+            <div className="px-6 py-6 sm:px-8">
+              <div className="whitespace-pre-line break-words rounded-2xl p-5 text-[0.98rem] leading-[1.85]" style={{ background: '#FBF6EA', border: '1px dashed rgba(185, 138, 47, 0.45)', fontFamily: sinhalaFont }}>
+                {current.message.split(current.url).map((part, i, arr) => (
+                  <React.Fragment key={i}>
+                    {part}
+                    {i < arr.length - 1 && (
+                      <a href={current.url} target="_blank" rel="noopener noreferrer" className="break-all font-medium underline decoration-[rgba(185,138,47,0.5)] underline-offset-4" style={{ color: GOLD_DARK }}>
+                        {current.url}
+                      </a>
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
 
-        {/* Generated Links List */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
-          <h2 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
-            Recently Generated Links
-          </h2>
-
-          {links.length === 0 ? (
-            <div className="text-center py-10 text-slate-400 text-sm">
-              No links generated yet.
+              <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <ActionButton primary onClick={() => copy(current.message, 'msg')} icon={copied === 'msg' ? Check : Copy} label={copied === 'msg' ? 'Copied!' : 'Copy Message'} />
+                <ActionButton onClick={() => copy(current.url, 'url')} icon={copied === 'url' ? Check : Link2} label={copied === 'url' ? 'Copied!' : 'Copy Link'} />
+                <ActionButton href={whatsappUrl(current.message)} icon={MessageCircle} label="WhatsApp" />
+                <ActionButton href={current.url} icon={ExternalLink} label="Open" />
+              </div>
             </div>
+          </section>
+        )}
+
+        {/* History */}
+        <section className="mt-8 rounded-[1.75rem] p-6 sm:p-8" style={{ background: 'rgba(255, 253, 246, 0.7)', border: '1px solid rgba(185, 138, 47, 0.25)' }}>
+          <div className="mb-5 flex items-baseline justify-between">
+            <h2 className="text-xl font-semibold" style={{ color: GOLD_DARK, fontFamily: serifFont }}>Guest List</h2>
+            <span className="text-xs uppercase tracking-[0.2em]" style={{ color: '#A8977A', fontFamily: "'Montserrat', sans-serif" }}>
+              {invites.length} {invites.length === 1 ? 'invite' : 'invites'}
+            </span>
+          </div>
+
+          {invites.length === 0 ? (
+            <p className="py-8 text-center italic" style={{ color: '#A8977A', fontFamily: serifFont }}>No invitations generated yet.</p>
           ) : (
-            <div className="space-y-4">
-              {links.map((link) => (
-                <div key={link.id} className="group flex flex-col md:flex-row md:items-center justify-between p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:border-slate-200 transition-colors gap-4">
-                  <div className="min-w-0">
-                    <p className="font-medium text-slate-800 truncate">
-                      {link.prefix} {link.guestName}
+            <ul className="space-y-3">
+              {invites.map((invite) => (
+                <li key={invite.id} className="flex flex-col gap-3 rounded-2xl px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between" style={{ background: '#FFFDF6', border: '1px solid rgba(185, 138, 47, 0.2)' }}>
+                  <button type="button" onClick={() => setCurrent(invite)} className="min-w-0 text-left">
+                    <p className="truncate font-semibold" style={{ fontFamily: sinhalaFont, color: INK }}>
+                      {invite.name} <span className="font-normal" style={{ color: GOLD_DARK }}>{SALUTATIONS[invite.salutation].si}</span>
                     </p>
-                    <p className="text-xs text-slate-500 mt-1">
-                      {link.createdAt.replace(',', '')}
-                    </p>
+                    <p className="mt-0.5 text-xs" style={{ color: '#A8977A' }}>{invite.createdAt}</p>
+                  </button>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <SmallButton onClick={() => copy(invite.message, invite.id)} title="Copy message">
+                      {copied === invite.id ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    </SmallButton>
+                    <SmallButton href={whatsappUrl(invite.message)} title="Send on WhatsApp"><MessageCircle className="h-4 w-4" /></SmallButton>
+                    <SmallButton onClick={() => handleDelete(invite.id)} title="Delete" danger><Trash2 className="h-4 w-4" /></SmallButton>
                   </div>
-
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button
-                      onClick={() => handleCopy(link)}
-                      className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-medium rounded-lg transition-colors"
-                    >
-                      {copiedId === link.id ? (
-                        <>
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-500"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                          Copied!
-                        </>
-                      ) : (
-                        <>
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                          Copy
-                        </>
-                      )}
-                    </button>
-                    
-                    <button
-                      onClick={() => handleDelete(link.id)}
-                      className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                      title="Delete link"
-                    >
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                    </button>
-                  </div>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
-        </div>
+        </section>
 
+        <div className="mt-10"><Ornament /></div>
       </div>
     </div>
+  );
+}
+
+function ActionButton({ icon: Icon, label, onClick, href, primary }: { icon: React.ElementType; label: string; onClick?: () => void; href?: string; primary?: boolean }) {
+  const className = 'flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-transform duration-200 hover:-translate-y-0.5 active:scale-95';
+  const style = primary
+    ? { background: goldGradient, color: '#FDF8EC', boxShadow: '0 10px 20px -12px rgba(120, 86, 30, 0.8)' }
+    : { background: '#FFFDF6', color: GOLD_DARK, border: '1.5px solid rgba(185, 138, 47, 0.45)' };
+  const content = <><Icon className="h-4 w-4" />{label}</>;
+  return href ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={className} style={style}>{content}</a>
+  ) : (
+    <button type="button" onClick={onClick} className={className} style={style}>{content}</button>
+  );
+}
+
+function SmallButton({ children, onClick, href, title, danger }: { children: React.ReactNode; onClick?: () => void; href?: string; title: string; danger?: boolean }) {
+  const className = `grid h-9 w-9 place-items-center rounded-full transition-colors ${danger ? 'hover:bg-red-50 hover:text-red-600' : 'hover:bg-[rgba(185,138,47,0.12)]'}`;
+  const style = { color: danger ? '#A8977A' : GOLD_DARK, border: '1px solid rgba(185, 138, 47, 0.3)' };
+  return href ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" title={title} aria-label={title} className={className} style={style}>{children}</a>
+  ) : (
+    <button type="button" onClick={onClick} title={title} aria-label={title} className={className} style={style}>{children}</button>
   );
 }
