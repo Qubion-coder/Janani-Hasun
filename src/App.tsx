@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, MapPin, Calendar, Clock, ChevronDown } from "lucide-react";
+import { Sparkles, MapPin, Calendar, Clock, ChevronDown, Phone } from "lucide-react";
 
 const INVITATION = {
   couple: {
@@ -23,12 +23,12 @@ const INVITATION = {
     name: "The Golden Crown Ballroom",
     hotel: "Heritage Hotel",
     city: "Anuradhapura",
-    mapQuery: "Heritage Hotel, Anuradhapura",
-    googleMapsLink: "https://maps.app.goo.gl/EXhT4sxjjX6SBCRp6",
+    mapQuery: "Heritage Hotel Anuradhapura, 8.3270834,80.3787097",
+    googleMapsLink: "https://maps.app.goo.gl/fjBMME7LuiS2rDLEA",
   },
   rsvpContacts: [
-    "W. M. S. Karunarathne - 071 419 4178",
-    "P. L. Chandrasena - 071 487 8852",
+    { name: "W. M. S. Karunarathne", phone: "071 419 4178" },
+    { name: "P. L. Chandrasena", phone: "071 487 8852" },
   ],
 } as const;
 
@@ -639,41 +639,6 @@ export default function WeddingInvitation() {
               </div>
             </section>
 
-            <section id="moments" className="relative z-10 w-full overflow-hidden bg-[#F1EBDD] px-6 py-16 sm:px-7 sm:py-24 border-t border-[#8C6420]/10">
-              <div className="mb-10 text-center sm:mb-14">
-                <span className="mb-2 block text-[0.66rem] uppercase" style={{ color: "#B98A2F", fontFamily: "'Montserrat', sans-serif", letterSpacing: "0.34em" }}>
-                  Our Moments
-                </span>
-                <h2 className="leading-tight" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, fontWeight: 700, color: "#8C6420", fontSize: "clamp(1.7rem,4.2vw,2.6rem)" }}>
-                  {lang === 'si' ? 'අපේ සුන්දර මතක' : 'Our Moments'}
-                </h2>
-                <div aria-hidden="true" className="mt-3" style={{ width: "120px", aspectRatio: "2100 / 756", margin: "0 auto", background: "linear-gradient(180deg, #D8B45F 0%, #B98A2F 55%, #8C6420 100%)", WebkitMaskImage: "url(/lotus-mandala/lotus-flourish.svg)", maskImage: "url(/lotus-mandala/lotus-flourish.svg)", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskPosition: "center", maskPosition: "center" }}></div>
-              </div>
-
-              <div className="mx-auto grid max-w-2xl grid-cols-2 items-start gap-4 sm:gap-8">
-                {COUPLE_IMAGES.map((src, i) => (
-                  <motion.div
-                    key={src}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
-                    transition={{ duration: 0.8, delay: i * 0.2 }}
-                    className={i === 1 ? "mt-10 sm:mt-16" : ""}
-                  >
-                    <div className="p-1.5 sm:p-2" style={{ background: "#FCF8EE", border: "1px solid rgba(185, 138, 47, 0.45)", borderRadius: "999px 999px 18px 18px", boxShadow: "0 22px 44px -28px rgba(120,86,30,0.55)" }}>
-                      <div className="overflow-hidden" style={{ aspectRatio: "3 / 4", borderRadius: "999px 999px 12px 12px", border: "1px solid rgba(216, 180, 95, 0.7)" }}>
-                        <img src={src} alt={lang === 'si' ? 'ජනනි සහ හසුන්' : 'Janani & Hasun'} loading="lazy" draggable="false" className="h-full w-full select-none object-cover" />
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              <p className="mx-auto mt-10 max-w-[36ch] text-center text-[1.02rem] leading-[1.9] text-[#5A4A33] sm:mt-14" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif` }}>
-                {lang === 'si' ? 'එකට ගෙවූ සෑම මොහොතක්ම අපට වටිනා මතකයකි.' : 'Every moment spent together is a memory we treasure.'}
-              </p>
-            </section>
-
             <section id="events" className="relative mx-auto w-full px-6 py-16 sm:px-7 sm:py-24"
               style={{
                 backgroundImage: 'url("/vintage_paper.png")',
@@ -712,7 +677,7 @@ export default function WeddingInvitation() {
               <div className="mx-auto mt-12 max-w-md space-y-4 relative z-10">
                 <div className="relative">
                   <div className="rounded-2xl overflow-hidden" style={{ background: "#FCF8EE", border: "1px solid rgba(185, 138, 47, 0.4)", boxShadow: "0 18px 38px -28px rgba(140, 100, 32, 0.35)" }}>
-                    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Janani+and+Hasun&dates=20261210T023000Z/20261210T103000Z&details=Join+us+to+celebrate+the+wedding+of+Janani+and+Hasun!&location=The+Golden+Crown+Ballroom,+Heritage+Hotel,+Anuradhapura,+Sri+Lanka" target="_blank" rel="noopener noreferrer" className="w-full flex items-center text-left transition-colors hover:bg-white/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 gap-4 px-4 sm:px-5 py-4">
+                    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Janani+and+Hasun&dates=20261210T023000Z/20261210T103000Z&details=Join+us+to+celebrate+the+wedding+of+Janani+and+Hasun!&location=The+Golden+Crown+Ballroom,+Heritage+Hotel+Anuradhapura,+Sri+Lanka" target="_blank" rel="noopener noreferrer" className="w-full flex items-center text-left transition-colors hover:bg-white/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 gap-4 px-4 sm:px-5 py-4">
                       <span className="flex-shrink-0 rounded-full flex items-center justify-center transition-colors w-10 h-10" style={{ background: "linear-gradient(135deg, #B98A2F, #8C6420)" }}>
                         <Calendar className="w-5 h-5 text-[#FDF8EC]" />
                       </span>
@@ -854,43 +819,6 @@ export default function WeddingInvitation() {
                     </div>
                   </div>
                   
-                  {rsvpForm.guests !== "0" && (
-                    <div className="mb-5">
-                      <p className="mb-2.5 text-[0.9rem]" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, fontWeight: 600, color: "#8C6420" }}>{lang === 'si' ? 'පැමිණෙන ගණන' : 'Number of Guests'}</p>
-                      <div className="flex items-center justify-center gap-6">
-                        <button 
-                          type="button" 
-                          onClick={() => {
-                            setRsvpForm(prev => {
-                              const current = parseInt(prev.guests) || 1;
-                              return { ...prev, guests: Math.max(1, current - 1).toString() };
-                            });
-                          }}
-                          className="grid h-11 w-11 place-items-center rounded-full text-xl transition-all hover:opacity-80 active:scale-90" 
-                          style={{ background: "rgba(185, 138, 47, 0.12)", color: "#8C6420", border: "1px solid rgba(185, 138, 47, 0.5)" }} 
-                          aria-label="Decrease guest count">
-                          -
-                        </button>
-                        <span className="leading-none" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", color: "#8C6420", fontSize: "2.6rem", minWidth: "3rem", textAlign: "center" }}>
-                          {parseInt(rsvpForm.guests) || 1}
-                        </span>
-                        <button 
-                          type="button" 
-                          onClick={() => {
-                            setRsvpForm(prev => {
-                              const current = parseInt(prev.guests) || 1;
-                              return { ...prev, guests: (current + 1).toString() };
-                            });
-                          }}
-                          className="grid h-11 w-11 place-items-center rounded-full text-xl transition-all hover:opacity-80 active:scale-90" 
-                          style={{ background: "rgba(185, 138, 47, 0.12)", color: "#8C6420", border: "1px solid rgba(185, 138, 47, 0.5)" }} 
-                          aria-label="Increase guest count">
-                          +
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                  
                   {(rsvpStatus === "success" || rsvpStatus === "error") && (
                     <p className={`text-xs text-center font-semibold mb-4 ${rsvpStatus === "success" ? "text-emerald-600" : "text-red-500"}`}>
                       {rsvpStatus === "success"
@@ -946,8 +874,22 @@ export default function WeddingInvitation() {
                   
                   <div className="mb-8 flex flex-col items-center gap-1 text-[1rem]" style={{ fontFamily: `${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, color: "#EDDFB8" }}>
                     <div className="font-bold uppercase tracking-widest text-[0.75rem] mb-1" style={{ fontFamily: "'Montserrat', sans-serif", opacity: 0.85 }}>Contact</div>
-                    <div>W. M. S. Karunarathne - 071 419 4178</div>
-                    <div>P. L. Chandrasena - 071 487 8852</div>
+                    {INVITATION.rsvpContacts.map((contact) => {
+                      const intl = `94${contact.phone.replace(/\D/g, "").replace(/^0/, "")}`;
+                      return (
+                        <div key={contact.phone} className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 py-1">
+                          <span>{contact.name} - {contact.phone}</span>
+                          <span className="flex items-center gap-2">
+                            <a href={`tel:+${intl}`} aria-label={`Call ${contact.name}`} className="grid h-8 w-8 place-items-center rounded-full transition-transform hover:-translate-y-0.5 active:scale-90" style={{ background: "rgba(248, 241, 220, 0.14)", border: "1px solid rgba(237, 223, 184, 0.5)", color: "#F8F1DC" }}>
+                              <Phone className="h-3.5 w-3.5" />
+                            </a>
+                            <a href={`https://wa.me/${intl}`} target="_blank" rel="noopener noreferrer" aria-label={`WhatsApp ${contact.name}`} className="grid h-8 w-8 place-items-center rounded-full transition-transform hover:-translate-y-0.5 active:scale-90" style={{ background: "rgba(248, 241, 220, 0.14)", border: "1px solid rgba(237, 223, 184, 0.5)", color: "#F8F1DC" }}>
+                              <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.47-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35zM12.05 21.5h-.01a9.45 9.45 0 0 1-4.82-1.32l-.35-.21-3.58.94.96-3.49-.23-.36a9.43 9.43 0 0 1-1.45-5.03c0-5.22 4.25-9.47 9.48-9.47 2.53 0 4.91.99 6.7 2.78a9.41 9.41 0 0 1 2.77 6.7c0 5.22-4.25 9.46-9.47 9.46zm8.06-17.53A11.32 11.32 0 0 0 12.05.63C5.77.63.66 5.74.66 12.02c0 2.01.52 3.97 1.52 5.69L.56 23.62l6.04-1.58a11.36 11.36 0 0 0 5.44 1.39h.01c6.28 0 11.39-5.11 11.39-11.39 0-3.04-1.18-5.9-3.33-8.05z"/></svg>
+                            </a>
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
 
                   <div className="relative mx-auto mb-7" style={{ width: "150px", height: "54px" }}>
