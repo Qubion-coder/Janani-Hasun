@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, MapPin, Calendar, Clock, ChevronDown, Phone } from "lucide-react";
-import { readGuestFromLocation, SALUTATIONS } from "./guest";
+import { displayName, readGuestFromLocation } from "./guest";
 
 const INVITATION = {
   couple: {
@@ -52,17 +52,20 @@ const HERO_BACKGROUND_IMAGE = PRE_IMAGES[4];
 const COUPLE_IMAGES = ["/c1.jpeg", "/c2.jpeg"];
 const THEME_WATERMARK_IMAGE = "/Gemini_Generated_Image_bu4x6cbu4x6cbu4x.jpg";
 
-function GuestGreeting({ name, salutation, lang, className = "" }: { name: string; salutation: string; lang: 'si' | 'en'; className?: string }) {
+function GuestInvite({ name, lang, className = "" }: { name: string; lang: 'si' | 'en'; className?: string }) {
+  const bodyFont = `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`;
+  const bodyStyle = { fontFamily: bodyFont, fontWeight: 500, color: "#5A4A33", fontSize: "clamp(0.95rem,3.6vw,1.1rem)", lineHeight: 1.7 };
   return (
-    <div className={`flex flex-col items-center ${className}`}>
+    <div className={`flex flex-col items-center text-center ${className}`}>
       <div aria-hidden="true" className="flex items-center gap-3" style={{ color: "#B98A2F" }}>
         <span style={{ width: 34, height: 1, background: "linear-gradient(90deg, transparent, #B98A2F)" }}></span>
         <span style={{ fontSize: "0.7rem" }}>❖</span>
         <span style={{ width: 34, height: 1, background: "linear-gradient(90deg, #B98A2F, transparent)" }}></span>
       </div>
-      <p className="mt-2 max-w-[22ch] text-center" style={{ lineHeight: 1.45 }}>
-        <span style={{ fontFamily: "'Cormorant Garamond', 'Noto Sans Sinhala', Georgia, serif", fontStyle: "italic", fontWeight: 600, color: "#8C6420", fontSize: "clamp(1.25rem,5vw,1.6rem)" }}>{name}</span>{" "}
-        <span style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, fontWeight: 600, color: "#5A4A33", fontSize: "clamp(0.98rem,3.8vw,1.15rem)" }}>{salutation}</span>
+      {lang === 'en' && <p className="mt-2" style={bodyStyle}>We cordially invite</p>}
+      <p className={`${lang === 'en' ? 'mt-0.5' : 'mt-2'} max-w-[24ch]`} style={{ fontFamily: "'Cormorant Garamond', 'Noto Sans Sinhala', Georgia, serif", fontStyle: "italic", fontWeight: 600, color: "#8C6420", fontSize: "clamp(1.3rem,5.2vw,1.7rem)", lineHeight: 1.35 }}>{name}</p>
+      <p className="mt-0.5 max-w-[30ch]" style={bodyStyle}>
+        {lang === 'si' ? 'අපගේ විශේෂ දිනය අප සමඟ සැමරීමට සාදරයෙන් ආරාධනා කරමු.' : 'to celebrate our special day with us.'}
       </p>
     </div>
   );
@@ -288,7 +291,6 @@ export default function WeddingInvitation() {
   const [isPlayingIntroVideo, setIsPlayingIntroVideo] = useState(false);
 
   const guest = readGuestFromLocation(window.location);
-  const guestSalutation = guest ? SALUTATIONS[guest.salutation] : null;
 
   const [rsvpForm, setRsvpForm] = useState({
     name: "",
@@ -298,6 +300,16 @@ export default function WeddingInvitation() {
   const [rsvpStatus, setRsvpStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   const audioRef = React.useRef<HTMLAudioElement>(null);
+
+  const closeWebsite = () => {
+    audioRef.current?.pause();
+    setIsPlaying(false);
+    // Browsers only allow closing tabs opened by script, so fall back to the first page when it is refused.
+    window.close();
+    setIsPlayingIntroVideo(false);
+    setHasStarted(false);
+    setIsOpened(false);
+  };
   const introVideoRef = React.useRef<HTMLVideoElement>(null);
 
   const submitToGoogleSheet = async (payload: Record<string, string>) => {
@@ -336,7 +348,7 @@ export default function WeddingInvitation() {
         name: rsvpForm.name.trim(),
         guests: rsvpForm.guests,
         inviteName: guest?.name ?? "",
-        salutation: guest?.salutation ?? "",
+        salutation: guest ? displayName(guest.name, guest.prefix) : "",
       });
 
       setRsvpStatus("success");
@@ -480,19 +492,15 @@ export default function WeddingInvitation() {
                     <div aria-hidden="true" style={{ width: "min(56vw,260px)", height: "min(20vw,94px)", background: "linear-gradient(180deg, #D8B45F 0%, #B98A2F 55%, #8C6420 100%)", WebkitMaskImage: "url('/image-removebg-preview (4).png')", maskImage: "url('/image-removebg-preview (4).png')", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskPosition: "center", maskPosition: "center" }}></div>
                   </div>
 
-                  {guest && guestSalutation && (
-                    <GuestGreeting name={guest.name} salutation={lang === 'si' ? guestSalutation.si : guestSalutation.en} lang={lang} className="mt-6" />
+                  {guest && (
+                    <p className="mt-6 max-w-[24ch]" style={{ fontFamily: "'Cormorant Garamond', 'Noto Sans Sinhala', Georgia, serif", fontStyle: "italic", fontWeight: 600, color: "#8C6420", fontSize: "clamp(1.3rem,5.2vw,1.7rem)", lineHeight: 1.35 }}>
+                      {displayName(guest.name, guest.prefix)}
+                    </p>
                   )}
 
-                  <p className={guest ? "mt-3" : "mt-7"} aria-label="සාදර ඇරයුමයි !">
+                  <p className={guest ? "mt-2" : "mt-7"} aria-label="සාදර ඇරයුමයි !">
                     <span aria-hidden="true" className={lang === "si" ? "font-sinhala-name" : "font-english-title tracking-wide"} style={{ fontVariantLigatures: "none", color: "#8C6420", fontSize: "clamp(1.7rem,7vw,2.8rem)", lineHeight: 1.2 }}>{lang === 'si' ? 'සාදර ඇරයුමයි' : 'You\'re Invited'}</span>
                     <span aria-hidden="true" style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, fontWeight: 700, color: "#8C6420", fontSize: "clamp(1.7rem,7vw,2.8rem)", lineHeight: 1.2 }}>{lang === 'si' ? ' !' : '!'}</span>
-                  </p>
-
-                  <p className="mt-4" aria-hidden="true" style={{ fontSize: "clamp(1.4rem,5.5vw,2.1rem)", display: "flex", gap: "0.4rem", alignItems: "center" }}>
-                    <span className={lang === "si" ? "font-sinhala-name" : "font-english-title tracking-wide"} style={{ fontVariantLigatures: "none", color: "#B98A2F" }}>{lang === 'si' ? 'ජනනි' : 'Janani'}</span>
-                    <span style={{ fontFamily: `'Noto Sans Sinhala', ${lang === 'en' ? "'Cormorant Garamond'" : "'Abhaya Libre'"}, serif`, color: "#8C6420", fontWeight: 700 }}>{lang === 'si' ? 'සහ' : 'and'}</span>
-                    <span className={lang === "si" ? "font-sinhala-name" : "font-english-title tracking-wide"} style={{ fontVariantLigatures: "none", color: "#B98A2F" }}>{lang === 'si' ? 'හසුන්' : 'Hasun'}</span>
                   </p>
 
                   <button 
@@ -538,7 +546,7 @@ export default function WeddingInvitation() {
             <motion.button
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              onClick={() => setIsOpened(false)}
+              onClick={closeWebsite}
               className="fixed top-6 right-6 z-50 bg-white/80 backdrop-blur-md p-3 rounded-full shadow-lg text-[#8f7322] hover:bg-emerald-50 transition-colors"
             >
               <div className="flex flex-col items-center">
@@ -554,8 +562,8 @@ export default function WeddingInvitation() {
               </div>
               
               <div className="relative mx-auto max-w-2xl px-6 text-center sm:px-8 pb-12 z-10 mt-6">
-                {guest && guestSalutation && (
-                  <GuestGreeting name={guest.name} salutation={lang === 'si' ? guestSalutation.si : guestSalutation.en} lang={lang} className="mb-4" />
+                {guest && (
+                  <GuestInvite name={displayName(guest.name, guest.prefix)} lang={lang} className="mb-5" />
                 )}
                 <div>
                   <h1 aria-label="සාදර ඇරයුමයි !" className="-mt-1" style={{ fontSize: "clamp(2.1rem,8.5vw,3.4rem)", lineHeight: 1.25, backgroundImage: "linear-gradient(170deg, #D8B45F 0%, #B98A2F 45%, #8C6420 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>

@@ -19,12 +19,6 @@ const SHEETS = {
   },
 };
 
-const SALUTATIONS = {
-  obata: "ඔබට",
-  depala: "ඔබ දෙපළට",
-  pavula: "ඔබ ඇතුළු පවුලේ සැමට",
-};
-
 /** Run once from the editor to create the RSVP sheet and its headers. */
 function setupSheets() {
   getSheet_("rsvp");
@@ -64,7 +58,6 @@ function saveRsvp_(params) {
 
   const guests = clean_(params.guests, 3) || "1";
   const attending = guests !== "0";
-  const salutationKey = clean_(params.salutation, 20);
 
   const sheet = getSheet_("rsvp");
   sheet.appendRow([
@@ -73,7 +66,7 @@ function saveRsvp_(params) {
     attending ? "Attending" : "Declined",
     attending ? Number(guests) || 1 : 0,
     clean_(params.inviteName, 120),
-    SALUTATIONS[salutationKey] || "",
+    clean_(params.salutation, 160),
   ]);
 
   const row = sheet.getLastRow();
