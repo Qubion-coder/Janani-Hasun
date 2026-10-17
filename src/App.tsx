@@ -62,10 +62,9 @@ function GuestInvite({ name, lang, className = "" }: { name: string; lang: 'si' 
         <span style={{ fontSize: "0.7rem" }}>❖</span>
         <span style={{ width: 34, height: 1, background: "linear-gradient(90deg, #B98A2F, transparent)" }}></span>
       </div>
-      {lang === 'en' && <p className="mt-2" style={bodyStyle}>We cordially invite</p>}
-      <p className={`${lang === 'en' ? 'mt-0.5' : 'mt-2'} max-w-[24ch]`} style={{ fontFamily: "'Cormorant Garamond', 'Noto Sans Sinhala', Georgia, serif", fontStyle: "italic", fontWeight: 600, color: "#8C6420", fontSize: "clamp(1.3rem,5.2vw,1.7rem)", lineHeight: 1.35 }}>{name}</p>
+      <p className="mt-2 max-w-[24ch]" style={{ fontFamily: "'Cormorant Garamond', 'Noto Sans Sinhala', Georgia, serif", fontStyle: "italic", fontWeight: 600, color: "#8C6420", fontSize: "clamp(1.3rem,5.2vw,1.7rem)", lineHeight: 1.35 }}>Dear {name}</p>
       <p className="mt-0.5 max-w-[30ch]" style={bodyStyle}>
-        {lang === 'si' ? 'අපගේ විශේෂ දිනය අප සමඟ සැමරීමට සාදරයෙන් ආරාධනා කරමු.' : 'to celebrate our special day with us.'}
+        {lang === 'si' ? 'අපගේ විශේෂ දිනය අප සමඟ සැමරීමට සාදරයෙන් ආරාධනා කරමු.' : 'We cordially invite you to celebrate our special day with us.'}
       </p>
     </div>
   );
@@ -494,7 +493,7 @@ export default function WeddingInvitation() {
 
                   {guest && (
                     <p className="mt-6 max-w-[24ch]" style={{ fontFamily: "'Cormorant Garamond', 'Noto Sans Sinhala', Georgia, serif", fontStyle: "italic", fontWeight: 600, color: "#8C6420", fontSize: "clamp(1.3rem,5.2vw,1.7rem)", lineHeight: 1.35 }}>
-                      {displayName(guest.name, guest.prefix)}
+                      Dear {displayName(guest.name, guest.prefix)}
                     </p>
                   )}
 
